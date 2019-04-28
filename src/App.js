@@ -139,7 +139,7 @@ class Status extends Component {
     
 
     var colorToBe = [];
-
+// sets color of the box
     for (let i = 0; i < this.state.Url.length; i++) {
       if (sessionStorage.getItem('StatusCode' + i) == 200) {
         colorToBe[i] = 'green';
@@ -150,7 +150,7 @@ class Status extends Component {
         colorToBe[i] = 'grey';
       }
     }
-
+// displays the response payload
     function displayPayload(payload) {
 
       return (
@@ -162,7 +162,7 @@ class Status extends Component {
     }
 
 
-
+// displays the box
     return (
       <ul className="box-list">
         <li style={{ backgroundColor: colorToBe[0] }}
