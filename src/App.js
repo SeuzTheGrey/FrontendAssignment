@@ -14,7 +14,7 @@ class App extends Component {
     }
 
 
-
+// test endpoints
     const props = {
       Url: ['https://cognition.dev.stackworx.cloud/api/status',
         'https://ord.dev.stackworx.io/health',
@@ -82,7 +82,7 @@ class Status extends Component {
 
 
   }
-
+// request from endpoints
   GetStatus = (Url) => {
 
     for (let i = 0; i < Url.length; i++) {
