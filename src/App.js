@@ -163,6 +163,7 @@ class Status extends Component {
 
 
 // displays the box
+// refresh page to display, it doesnt work on first loading of the page.
     return (
       <ul className="box-list">
         <li style={{ backgroundColor: colorToBe[0] }}
