@@ -14,7 +14,7 @@ class App extends Component {
     }
 
 
-// test endpoints
+    // test endpoints
     const props = {
       Url: ['https://cognition.dev.stackworx.cloud/api/status',
         'https://ord.dev.stackworx.io/health',
@@ -71,7 +71,8 @@ class App extends Component {
   }
 }
 
-class Status extends Component {
+class FlexChange extends Component {
+
   constructor(props) {
     super(props)
     this.state = {
@@ -82,52 +83,83 @@ class Status extends Component {
 
 
   }
-// request from endpoints
-  GetStatus = (Url) => {
 
-    for (let i = 0; i < Url.length; i++) {
 
-      const request = require('request');
+  render() {
 
-      request(Url[i], ((error, response, body) => {
 
-        sessionStorage.setItem('StatusCode' + i, response && response.statusCode);
-        sessionStorage.setItem('body' + i, body);
-      }))
-        .on('response', function (response) {
 
-          console.log('response:', response);
-          console.log('Status:', response.statusCode);
+    return (<section></section>);
+  }
+}
 
-        })
-        .on('error', function (error) {
-          console.error('Error: ', error && error.message)
-        });
+class Status extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      Url: props.props.Url,
+      statusCode: [],
+      time: new Date().getUTCMinutes()
+    }
+
+    this.GetStatus = this.GetStatus.bind(this);
+    this.StatusTick = this.StatusTick.bind(this);
+
+  }
+  // request from endpoints
+  async GetStatus(Url, i) {
+
+
+
+    const request = require('request');
+
+    request(Url, ((error, response, body) => {
+
+      sessionStorage.setItem('StatusCode' + i, response && response.statusCode);
+      sessionStorage.setItem('body' + i, body);
+    }))
+      .on('response', function (response) {
+
+        console.log('response:', response);
+        console.log('Status:', response.statusCode);
+
+      })
+      .on('error', function (error) {
+        console.error('Error: ', error && error.message)
+      });
+
+
+
+  }
+
+  async StatusTick() {
+
+    this.setState({
+      time: new Date().getUTCMinutes()
+    });
+    for (let i = 0; i < this.state.Url.length; i++) {
+
+      await this.GetStatus(this.state.Url[i], i);
 
     }
 
   }
 
-  StatusTick = () => {
+  async componentDidMount() {
 
+    for (let i = 0; i < this.state.Url.length; i++) {
+
+      await this.GetStatus(this.state.Url[i], i);
+
+    }
     this.setState({
       time: new Date().getUTCMinutes()
     });
-    this.GetStatus(this.state.Url);
-
-  }
-
-  componentDidMount() {
-    this.setState({
-      time: new Date().getUTCMinutes()
-    });
-    this.GetStatus(this.state.Url);
   }
 
   componentDidUpdate() {
 
-    if(this.state.time == this.state.time + 5 )
-    {
+    if (this.state.time == this.state.time + 1) {
       this.setState();
       this.StatusTick();
     }
@@ -136,10 +168,10 @@ class Status extends Component {
 
   render() {
 
-    
+
 
     var colorToBe = [];
-// sets color of the box
+    // sets color of the box
     for (let i = 0; i < this.state.Url.length; i++) {
       if (sessionStorage.getItem('StatusCode' + i) == 200) {
         colorToBe[i] = 'green';
@@ -150,7 +182,7 @@ class Status extends Component {
         colorToBe[i] = 'grey';
       }
     }
-// displays the response payload
+    // displays the response payload
     function displayPayload(payload) {
 
       return (
@@ -162,8 +194,8 @@ class Status extends Component {
     }
 
 
-// displays the box
-// refresh page to display, it doesnt work on first loading of the page.
+    // displays the box
+    // refresh page to display, it doesnt work on first loading of the page.
     return (
       <ul className="box-list">
         <li style={{ backgroundColor: colorToBe[0] }}
